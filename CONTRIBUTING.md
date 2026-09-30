@@ -2,7 +2,7 @@
 開発にご協力いただきありがとうございます。<br/>
 開発を始める前にご一読ください。
 
-##　必要なもの
+## 必要なもの
 - 開発用PC
 - [Visual Studio Code](https://code.visualstudio.com/) (以下、VSCode)
 - [Git](https://git-scm.com/)

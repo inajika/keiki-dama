@@ -1,1 +1,55 @@
 @import 'tailwindcss' source('../app');
+
+@theme {
+  --font-sans: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Yu Gothic', 'Meiryo', sans-serif;
+
+  --color-page: #eef3f9;
+  --color-surface: #ffffff;
+  --color-ink: #1b2a4a;
+  --color-muted: #5b6b88;
+  --color-accent: #d6322a;
+  --color-gold: #e3a72f;
+  --color-gold-ink: #1b2a4a;
+  --color-line: #c9d4e5;
+  --color-miss-a: #ffffff;
+  --color-miss-b: #e6edf7;
+
+  --animate-win: win 0.7s ease-in-out 3;
+
+  @keyframes win {
+    50% {
+      opacity: 0.55;
+    }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-page: #10182b;
+    --color-surface: #18233d;
+    --color-ink: #eaf0fb;
+    --color-muted: #9aa9c7;
+    --color-accent: #f0544a;
+    --color-gold: #f0b942;
+    --color-line: #2b3a5c;
+    --color-miss-a: #1e2b48;
+    --color-miss-b: #25345a;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-page font-sans leading-[1.7] text-ink;
+  }
+
+  :focus-visible {
+    outline: 3px solid #2f6fdb;
+    outline-offset: 2px;
+  }
+
+  button,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+}

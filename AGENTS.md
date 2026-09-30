@@ -15,6 +15,11 @@ AIエージェントの行動指針をまとめています。
 
 @CONTRIBUTING.md
 
+## コミットメッセージルール
+詳細は [CONTRIBUTING.md](./CONTRIBUTING.md#コミットメッセージルール) を参照します。
+
+@CONTRIBUTING.md
+
 ## バージョニング戦略
 詳細は [CONTRIBUTING.md](./CONTRIBUTING.md#バージョニング戦略) を参照します。
 

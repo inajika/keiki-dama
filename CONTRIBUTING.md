@@ -2,7 +2,7 @@
 開発にご協力いただきありがとうございます。<br/>
 開発を始める前にご一読ください。
 
-##　必要なもの
+## 必要なもの
 - 開発用PC
 - [Visual Studio Code](https://code.visualstudio.com/) (以下、VSCode)
 - [Git](https://git-scm.com/)
@@ -97,6 +97,9 @@ VSCode の設定で保存時に自動修正する設定にしていますが、A
 ### 機能開発用ブランチ
 develop ブランチから派生し、 `feature/{何するのかがわかるような英単語3語程度をケバブケースで記述}` という命名をする。
 開発終了後は develop ブランチにマージする PR を作成する。
+
+## コミットメッセージルール
+[Conventional Commits](https://www.conventionalcommits.org/ja/v1.0.0/) に従ってコミットメッセージを日本語で記述します。
 
 ## バージョニング戦略
 [セマンティックバージョニング](https://semver.org/lang/ja/)により、 [package.json](./package.json) 、Git のタグを定義します。

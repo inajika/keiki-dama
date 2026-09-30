@@ -1,0 +1,38 @@
+name: タスク
+description: リファクタリング、環境整備、ドキュメント更新などのタスクを起票する
+title: "[タスク] "
+labels: ["task"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: やること
+      description: 実施する内容とその理由を記載してください。
+    validations:
+      required: true
+  - type: textarea
+    id: checklist
+    attributes:
+      label: 作業項目
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: definition-of-done
+    attributes:
+      label: 完了の定義 (DoD)
+      description: どうなればこの Issue を完了として Close してよいかをチェックリストで記載してください。
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: 補足
+      description: 参考リンクなどがあれば記載してください。
+    validations:
+      required: false

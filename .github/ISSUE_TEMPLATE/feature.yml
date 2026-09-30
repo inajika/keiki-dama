@@ -1,0 +1,39 @@
+name: 機能追加
+description: 新機能の追加や既存機能の改善を提案する
+title: "[機能] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: background
+    attributes:
+      label: 背景・目的
+      description: なぜこの機能が必要か、解決したい課題を記載してください。
+    validations:
+      required: true
+  - type: textarea
+    id: requirements
+    attributes:
+      label: 要件
+      description: 実現したいことを箇条書きで記載してください。
+      placeholder: |
+        - ...
+        - ...
+    validations:
+      required: true
+  - type: textarea
+    id: definition-of-done
+    attributes:
+      label: 完了の定義 (DoD)
+      description: どうなればこの Issue を完了として Close してよいかをチェックリストで記載してください。
+      placeholder: |
+        - [ ] ...
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: 補足
+      description: 参考リンク、検討した代替案、画面イメージなどがあれば記載してください。
+    validations:
+      required: false

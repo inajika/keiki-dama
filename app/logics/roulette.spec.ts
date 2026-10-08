@@ -1,5 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { buildCells, CELLS, calcRotationDelta, countHits, expectedBonus, MAX_HITS } from './roulette';
+import {
+  buildCells,
+  buildInitialOn,
+  buildPreset,
+  CELLS,
+  calcRotationDelta,
+  countHits,
+  expectedBonus,
+  formatSimulation,
+  INDICATORS,
+  MAX_HITS,
+  simulate,
+  yen,
+} from './roulette';
 
 describe('countHits', () => {
   it('指標が全て×でも基本の1枠', () => {
@@ -49,5 +62,59 @@ describe('calcRotationDelta', () => {
   });
   it('turns 分の回転が加算される', () => {
     expect(calcRotationDelta(0, 0, 5)).toBe(1800);
+  });
+});
+
+describe('yen', () => {
+  it('3桁区切りで「円」を付ける', () => {
+    expect(yen(10000)).toBe('10,000円');
+  });
+});
+
+describe('buildInitialOn', () => {
+  it('すべての指標が×', () => {
+    const on = buildInitialOn();
+    expect(Object.keys(on)).toHaveLength(INDICATORS.length);
+    expect(Object.values(on).every((v) => !v)).toBe(true);
+  });
+});
+
+describe('buildPreset', () => {
+  it('数値指定なら先頭からその数だけ○', () => {
+    const on = buildPreset(3);
+    expect(INDICATORS.map((d) => on[d.id])).toEqual([true, true, true, false, false, false]);
+  });
+  it('random は乱数が0.5未満の指標だけ○', () => {
+    const values = [0.1, 0.9, 0.4, 0.5, 0.0, 0.99];
+    let i = 0;
+    const on = buildPreset('random', () => values[i++]);
+    expect(INDICATORS.map((d) => on[d.id])).toEqual([true, false, true, false, true, false]);
+  });
+});
+
+describe('simulate', () => {
+  it('乱数が0なら常に先頭マス (大当たり) を引く', () => {
+    expect(simulate(buildCells(4), 10, () => 0)).toEqual({
+      runs: 10,
+      averageBonus: 1000,
+      hitRate: 1,
+      jackpotRate: 1,
+    });
+  });
+  it('末尾のハズレを引き続けると上乗せ0', () => {
+    expect(simulate(buildCells(1), 5, () => 0.99)).toEqual({
+      runs: 5,
+      averageBonus: 0,
+      hitRate: 0,
+      jackpotRate: 0,
+    });
+  });
+});
+
+describe('formatSimulation', () => {
+  it('表示用の文字列にする', () => {
+    expect(formatSimulation({ runs: 10000, averageBonus: 250, hitRate: 0.5, jackpotRate: 0.1 })).toBe(
+      '10,000回の平均:上乗せ +250円 ・ 当たり 50.0% ・ 大当たり 10.0%',
+    );
   });
 });

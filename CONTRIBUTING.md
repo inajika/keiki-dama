@@ -56,6 +56,23 @@ npm run preview
 ブラウザで `http://localhost:3000/` にアクセスすると確認できます。<br/>
 なお、 `npm run dev` と `npm run preview` は待ち受けポート番号が同じであるため同時に実行できません。
 
+### KV・Cron を使った確認
+> [!NOTE]
+> KV・Cron は実装前のため、以下は設計時点の想定です。実装時に動作確認して確定してください。
+
+`npm run dev` (Vite) では KV と Cron は使えません。確認は `npm run preview` (`wrangler dev`) で行います。
+
+```bash
+# Cron の実行 (Cron を `wrangler dev --test-scheduled` で起動してから呼び出す)
+curl "http://localhost:3000/__scheduled?cron=*+*+*+*+*"
+
+# KV の確認・編集 (ローカルのエミュレート環境)
+npx wrangler kv key get --binding=INDICATORS --local indicators:latest
+npx wrangler kv key put --binding=INDICATORS --local indicators:latest '{...}'
+```
+
+外部 API の鍵は、リポジトリにコミットしない `.dev.vars` に書きます。本番は `wrangler secret put` で設定します。
+
 ### フォーマットチェック
 ```bash
 npm run check
@@ -90,6 +107,10 @@ gh pr create --base develop
 - 変数名、関数名、プロパティ名はローワーキャメルケースで命名する。
 - 定数名はアッパースネークケースで命名する。
 - 型名、インターフェース名、クラス名、React コンポーネント名はアッパーキャメルケースで命名する。
+
+### 画面設計について
+- スマートフォン (縦画面) での表示を前提とし、モバイルファーストで実装する。
+- 補足情報はページ遷移させず、ポップアップ (モーダル等) での表示を優先する。
 
 ### 実装について
 - 画面やAPIのルーティング層 (`routes/`) 、ロジック層 (`logics/`) 、DBやAPIなどの外部連携層 (`repositories/`) の3つを基本として、適宜ディレクトリによる分類分けをする。

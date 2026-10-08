@@ -8,7 +8,7 @@
 - [Git](https://git-scm.com/)
 - [Docker](https://www.docker.com/ja-jp/)
 - [GitHub](https://github.co.jp/) アカウント
-- [GitHub CLI](https://cli.github.com/) (任意。Issue や PR を CLI から操作したい場合に利用する)
+- [GitHub CLI](https://cli.github.com/) (任意。PR を CLI から操作したい場合に利用する)
 
 ## 環境構築
 
@@ -27,7 +27,7 @@
     <kbd>Ctrl</kbd> (macOS では <kbd>Command</kbd>) + <kbd>Shift</kbd> + <kbd>P</kbd> でコマンドパレットが開きます。
 
 > [!NOTE]
-> GitHub CLI は DevContainer には導入していません。Issue や PR を CLI から操作したい場合は、[公式の手順](https://github.com/cli/cli#installation)でホストにインストールしてください。必須ではなく、Web 上の操作でも同じことができます。
+> GitHub CLI は DevContainer には導入していません。PR を CLI から操作したい場合は、[公式の手順](https://github.com/cli/cli#installation)でホストにインストールしてください。必須ではなく、Web 上の操作でも同じことができます。
 
 ## 技術スタック
 
@@ -77,41 +77,9 @@ npm run test
 Web 上の操作でも同じことができます。
 
 ```bash
-# Issue の一覧・詳細を確認する
-gh issue list
-gh issue view {Issue番号}
-
-# 自分に Issue をアサインする
-gh issue edit {Issue番号} --add-assignee @me
-
-# develop ブランチ向けに PR を作成する (本文に `Closes #{Issue番号}` を記載する)
+# develop ブランチ向けに PR を作成する
 gh pr create --base develop
 ```
-
-## Issue 駆動開発
-開発は GitHub Issue を起点に進めます。
-
-### 流れ
-1. Issue を起票する。 (下記の[テンプレート](#issue-テンプレート)から選択する。)
-2. 着手する Issue に自分をアサインする。
-3. develop ブランチから[機能開発用ブランチ](#機能開発用ブランチ)を作成する。
-4. 実装し、`npm run check:fix` と `npm run test` を実行する。
-5. [コミットメッセージルール](#コミットメッセージルール)に従ってコミットする。
-6. develop ブランチ向けの PR を作成し、本文に `Closes #{Issue番号}` を記載する。
-7. レビュー後にマージする。マージすると Issue が自動的に Close される。
-
-### Issue テンプレート
-| テンプレート | 用途 | ラベル |
-| --- | --- | --- |
-| 機能追加 | 新機能の追加、既存機能の改善 | `enhancement` |
-| バグ報告 | 不具合の報告 | `bug` |
-| タスク | リファクタリング、環境整備、ドキュメント更新など | `task` |
-
-- 空の Issue は作成できません。必ずテンプレートを利用してください。
-- 「完了の定義 (DoD)」は、Close してよい状態をチェックリストで具体的に書きます。PR 作成前に DoD をすべて満たしているか確認してください。
-
-### 1 Issue 1 PR
-1 つの Issue に対して 1 つの PR を作成することを基本とします。Issue が大きい場合は分割してください。
 
 ## コーディングルール
 コーディングをする際には以下を守ってください。
@@ -131,6 +99,10 @@ gh pr create --base develop
 - テスト対象と同じ階層に `*.spec.ts` ファイルを配置して、そこに記述する。
 - 適宜モック等を利用し、ホワイトボックステストを記述する。
 - 原則、自前実装しているものに関してはテストコードを作成する。
+
+### コメントについて
+- JSDocを残すようにし、そこで何をするものなのかを明記します。
+- なぜその実装であるのかという意図が分かりづらいときにはコメントを残します。
 
 ## ブランチ運用
 ### master ブランチ

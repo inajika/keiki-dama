@@ -1,6 +1,10 @@
+/** マスの種別 (ハズレ / 当たり / 大当たり) */
 export type CellType = 'miss' | 'hit' | 'jackpot';
 
+/** ルーレットのマス数 */
 export const CELLS = 10;
+/** 1マスあたりの角度 */
+export const SEGMENT_DEG = 360 / CELLS;
 export const BASE_HITS = 1;
 export const MAX_HITS = 6;
 export const HIT_BONUS = 500;
@@ -15,6 +19,15 @@ export const INDICATORS = [
   { id: 'stock', name: '日経平均', cond: '年間でプラス' },
   { id: 'bonus', name: '冬のボーナス', cond: '前年より増加' },
 ] as const;
+
+/** 経済指標のID */
+export type IndicatorId = (typeof INDICATORS)[number]['id'];
+
+/** ルーレットの進行状態 */
+export type Result = { kind: 'idle' } | { kind: 'ready' } | { kind: 'spinning' } | { kind: 'done'; index: number };
+
+/** プリセット指定。数値は先頭から○にする指標数、'random' は各指標をランダムに決める */
+export type Preset = number | 'random';
 
 export const AGES = [
   { label: '未就学', base: 1000 },
@@ -55,4 +68,52 @@ export function calcRotationDelta(currentRotation: number, targetDeg: number, tu
   const current = ((currentRotation % 360) + 360) % 360;
   const need = ((((360 - targetDeg) % 360) - current) % 360) + 360;
   return turns * 360 + (need % 360);
+}
+
+/** 金額を「1,000円」形式に整形する */
+export function yen(n: number): string {
+  return `${n.toLocaleString('ja-JP')}円`;
+}
+
+/** すべての指標が×の状態を返す */
+export function buildInitialOn(): Record<IndicatorId, boolean> {
+  return Object.fromEntries(INDICATORS.map((d) => [d.id, false])) as Record<IndicatorId, boolean>;
+}
+
+/**
+ * プリセットに対応する指標の○/×を返す
+ * @param random 0以上1未満の乱数を返す関数。テストで差し替えられるよう注入する
+ */
+export function buildPreset(preset: Preset, random: () => number = Math.random): Record<IndicatorId, boolean> {
+  return Object.fromEntries(
+    INDICATORS.map((d, i) => [d.id, preset === 'random' ? random() < 0.5 : i < preset]),
+  ) as Record<IndicatorId, boolean>;
+}
+
+/** シミュレーション結果 */
+export type SimulationSummary = { runs: number; averageBonus: number; hitRate: number; jackpotRate: number };
+
+/**
+ * ルーレットを runs 回まわしたときの平均上乗せ額と当たり率を集計する
+ * @param random 0以上1未満の乱数を返す関数。テストで差し替えられるよう注入する
+ */
+export function simulate(cells: CellType[], runs: number, random: () => number = Math.random): SimulationSummary {
+  let total = 0;
+  let hitCount = 0;
+  let jackpotCount = 0;
+  for (let i = 0; i < runs; i++) {
+    const type = cells[Math.floor(random() * cells.length)];
+    total += bonusOf(type);
+    if (type !== 'miss') hitCount++;
+    if (type === 'jackpot') jackpotCount++;
+  }
+  return { runs, averageBonus: total / runs, hitRate: hitCount / runs, jackpotRate: jackpotCount / runs };
+}
+
+/** シミュレーション結果を画面表示用の文字列にする */
+export function formatSimulation(summary: SimulationSummary): string {
+  return (
+    `${summary.runs.toLocaleString('ja-JP')}回の平均:上乗せ +${summary.averageBonus.toFixed(0)}円` +
+    ` ・ 当たり ${(summary.hitRate * 100).toFixed(1)}% ・ 大当たり ${(summary.jackpotRate * 100).toFixed(1)}%`
+  );
 }

@@ -1,5 +1,28 @@
 import { describe, expect, it } from 'vitest';
-import { buildCells, CELLS, calcRotationDelta, expectedBonus, formatSimulation, simulate, yen } from './roulette';
+import {
+  buildCells,
+  CELLS,
+  calcRotationDelta,
+  clampHits,
+  expectedBonus,
+  formatSimulation,
+  MAX_HITS,
+  MIN_HITS,
+  simulate,
+  yen,
+} from './roulette';
+
+describe('clampHits', () => {
+  it('範囲内はそのまま', () => {
+    expect(clampHits(4)).toBe(4);
+  });
+  it('下限未満は MIN_HITS', () => {
+    expect(clampHits(0)).toBe(MIN_HITS);
+  });
+  it('上限超は MAX_HITS', () => {
+    expect(clampHits(10)).toBe(MAX_HITS);
+  });
+});
 
 describe('buildCells', () => {
   it('マス数は常に CELLS', () => {

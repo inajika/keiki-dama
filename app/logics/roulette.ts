@@ -5,13 +5,23 @@ export type CellType = 'miss' | 'hit' | 'jackpot';
 export const CELLS = 10;
 /** 1マスあたりの角度 */
 export const SEGMENT_DEG = 360 / CELLS;
-export const BASE_HITS = 1;
+/** 当たり枠の初期値 */
+export const DEFAULT_HITS = 1;
+/** 当たり枠の下限 (ハズレのみ・全部当たりを避けるため 1〜CELLS-1 に収める) */
+export const MIN_HITS = 1;
+/** 当たり枠の上限 */
+export const MAX_HITS = CELLS - 1;
 export const HIT_BONUS = 500;
 export const JACKPOT_BONUS = 1000;
 export const JACKPOT_MIN_HITS = 4;
 
 /** ルーレットの進行状態 */
 export type Result = { kind: 'idle' } | { kind: 'spinning' } | { kind: 'done'; index: number };
+
+/** 当たり枠の数を MIN_HITS〜MAX_HITS の範囲に収める */
+export function clampHits(hits: number): number {
+  return Math.min(Math.max(hits, MIN_HITS), MAX_HITS);
+}
 
 /** hits 個の当たりを均等に散らし、hits が JACKPOT_MIN_HITS 以上なら最初の1つを大当たりにする */
 export function buildCells(hits: number): CellType[] {

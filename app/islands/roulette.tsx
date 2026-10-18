@@ -1,15 +1,19 @@
 import { useState } from 'hono/jsx';
+import { HitsStepper } from '@/components/roulette/hits-stepper';
 import { Pointer } from '@/components/roulette/pointer';
 import { ResultPanel } from '@/components/roulette/result-panel';
 import { RulesSection } from '@/components/roulette/rules-section';
 import { Wheel } from '@/components/roulette/wheel';
 import {
-  BASE_HITS,
   buildCells,
   CELLS,
   calcRotationDelta,
+  clampHits,
+  DEFAULT_HITS,
   expectedBonus,
   formatSimulation,
+  MAX_HITS,
+  MIN_HITS,
   type Result,
   SEGMENT_DEG,
   simulate,
@@ -29,9 +33,16 @@ export default function Roulette() {
   const [result, setResult] = useState<Result>({ kind: 'idle' });
   const [simOut, setSimOut] = useState('');
 
-  const hits = BASE_HITS;
+  const [hits, setHits] = useState(DEFAULT_HITS);
   const cells = buildCells(hits);
   const winIndex = result.kind === 'done' && cells[result.index] !== 'miss' ? result.index : null;
+
+  /** 当たり枠を変更する。回転中は無視し、変更後は前回の結果を消す */
+  const changeHits = (next: number) => {
+    if (spinning) return;
+    setHits(clampHits(next));
+    setResult({ kind: 'idle' });
+  };
 
   /** ルーレットを回し、アニメーション終了後に結果を確定する */
   const spin = () => {
@@ -74,6 +85,7 @@ export default function Roulette() {
           当たり枠 <span>{hits}</span>
           <small class="ml-1 text-base font-bold text-muted">/ {CELLS}</small>
         </div>
+        <HitsStepper hits={hits} min={MIN_HITS} max={MAX_HITS} disabled={spinning} onChange={changeHits} />
         <p class="mt-0.5 mb-0 text-[.8125rem] text-muted">
           当たり確率 {(hits * 100) / CELLS}% ・ 1人あたり期待値 +{Math.round(expectedBonus(cells))}円
         </p>

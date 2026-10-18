@@ -1,7 +1,11 @@
-import { BASE_HITS, HIT_BONUS, yen } from '@/logics/roulette';
+import { HIT_BONUS, JACKPOT_BONUS, JACKPOT_MIN_HITS, MAX_HITS, MIN_HITS, yen } from '@/logics/roulette';
 import { chipClass } from './styles';
 
-const rules = [`当たり枠は${BASE_HITS}マス`, `当たりは+${yen(HIT_BONUS)}`, 'ハズレは±0(据え置き)で、減額はありません'];
+const rules = [
+  `当たり枠は${MIN_HITS}〜${MAX_HITS}マスの範囲で変更できます`,
+  `当たりは+${yen(HIT_BONUS)}。当たり枠が${JACKPOT_MIN_HITS}マス以上のときは、そのうち1マスが+${yen(JACKPOT_BONUS)}の大当たり`,
+  'ハズレは±0(据え置き)で、減額はありません',
+];
 
 type RulesSectionProps = {
   /** シミュレーション結果の表示文字列。未実行なら空文字 */

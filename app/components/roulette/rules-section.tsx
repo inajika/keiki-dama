@@ -1,12 +1,7 @@
 import { BASE_HITS, HIT_BONUS, yen } from '@/logics/roulette';
 import { chipClass } from './styles';
 
-const rules = [
-  `当たり枠は${BASE_HITS}マス`,
-  `当たりは+${yen(HIT_BONUS)}`,
-  'ハズレは±0(据え置き)で、減額はありません',
-  `予算は「基本額 + ${yen(HIT_BONUS)}」で確保しておけば足ります`,
-];
+const rules = [`当たり枠は${BASE_HITS}マス`, `当たりは+${yen(HIT_BONUS)}`, 'ハズレは±0(据え置き)で、減額はありません'];
 
 type RulesSectionProps = {
   /** シミュレーション結果の表示文字列。未実行なら空文字 */

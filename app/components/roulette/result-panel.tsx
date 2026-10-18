@@ -3,13 +3,11 @@ import { bonusOf, type CellType, type Result, yen } from '@/logics/roulette';
 type ResultPanelProps = {
   result: Result;
   cells: CellType[];
-  /** 選択中の年齢の基本額 (円) */
-  base: number;
 };
 
 /** ルーレットの進行状況と結果(上乗せ額)を表示するパネル */
 export function ResultPanel(props: ResultPanelProps) {
-  const { result, cells, base } = props;
+  const { result, cells } = props;
   let border = 'border-line';
   let main = 'ルーレットを回してみましょう';
   let sub = '当たり枠は上の数字のとおりです';
@@ -22,12 +20,12 @@ export function ResultPanel(props: ResultPanelProps) {
     const type = cells[result.index];
     const bonus = bonusOf(type);
     if (type === 'miss') {
-      main = `据え置き ${yen(base)}`;
-      sub = '今回は上乗せなし。来年の景気に期待しましょう';
+      main = '上乗せなし';
+      sub = '今回は据え置き。来年に期待しましょう';
     } else {
       border = type === 'jackpot' ? 'border-gold' : 'border-accent';
       main = `${type === 'jackpot' ? '大当たり! ' : '当たり! '}+${yen(bonus)}`;
-      sub = `${yen(base)} → ${yen(base + bonus)}`;
+      sub = 'おめでとう!';
     }
   }
 

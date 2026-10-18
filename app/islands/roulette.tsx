@@ -1,11 +1,9 @@
 import { useState } from 'hono/jsx';
-import { AgeSelect } from '@/components/roulette/age-select';
 import { Pointer } from '@/components/roulette/pointer';
 import { ResultPanel } from '@/components/roulette/result-panel';
 import { RulesSection } from '@/components/roulette/rules-section';
 import { Wheel } from '@/components/roulette/wheel';
 import {
-  AGES,
   BASE_HITS,
   buildCells,
   CELLS,
@@ -25,7 +23,6 @@ const SIMULATION_RUNS = 10000;
  * `islands/` 配下のファイルは Island として扱われるため、props を受け取るだけの子コンポーネントはここに置かない。
  */
 export default function Roulette() {
-  const [age, setAge] = useState(2);
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [transition, setTransition] = useState('none');
@@ -91,8 +88,7 @@ export default function Roulette() {
         ルーレットを回す
       </button>
 
-      <ResultPanel result={result} cells={cells} base={AGES[age].base} />
-      <AgeSelect age={age} onChange={setAge} />
+      <ResultPanel result={result} cells={cells} />
       <RulesSection simOut={simOut} onSimulate={runSimulation} />
     </main>
   );

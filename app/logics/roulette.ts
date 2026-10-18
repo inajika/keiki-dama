@@ -13,15 +13,6 @@ export const JACKPOT_MIN_HITS = 4;
 /** ルーレットの進行状態 */
 export type Result = { kind: 'idle' } | { kind: 'spinning' } | { kind: 'done'; index: number };
 
-export const AGES = [
-  { label: '未就学', base: 1000 },
-  { label: '小学校低学年', base: 2000 },
-  { label: '小学校高学年', base: 3000 },
-  { label: '中学生', base: 5000 },
-  { label: '高校生', base: 5000 },
-  { label: '大学生', base: 10000 },
-] as const;
-
 /** hits 個の当たりを均等に散らし、hits が JACKPOT_MIN_HITS 以上なら最初の1つを大当たりにする */
 export function buildCells(hits: number): CellType[] {
   const cells: CellType[] = Array.from({ length: CELLS }, () => 'miss');

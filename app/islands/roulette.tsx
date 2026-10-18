@@ -1,6 +1,5 @@
 import { useState } from 'hono/jsx';
 import { AgeSelect } from '@/components/roulette/age-select';
-import { IndicatorList } from '@/components/roulette/indicator-list';
 import { Pointer } from '@/components/roulette/pointer';
 import { ResultPanel } from '@/components/roulette/result-panel';
 import { RulesSection } from '@/components/roulette/rules-section';
@@ -9,17 +8,10 @@ import {
   AGES,
   BASE_HITS,
   buildCells,
-  buildInitialOn,
-  buildPreset,
   CELLS,
   calcRotationDelta,
-  countHits,
   expectedBonus,
   formatSimulation,
-  INDICATORS,
-  type IndicatorId,
-  MAX_HITS,
-  type Preset,
   type Result,
   SEGMENT_DEG,
   simulate,
@@ -33,7 +25,6 @@ const SIMULATION_RUNS = 10000;
  * `islands/` 配下のファイルは Island として扱われるため、props を受け取るだけの子コンポーネントはここに置かない。
  */
 export default function Roulette() {
-  const [on, setOn] = useState(buildInitialOn);
   const [age, setAge] = useState(2);
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
@@ -41,22 +32,9 @@ export default function Roulette() {
   const [result, setResult] = useState<Result>({ kind: 'idle' });
   const [simOut, setSimOut] = useState('');
 
-  const onCount = INDICATORS.filter((d) => on[d.id]).length;
-  const hits = countHits(onCount);
+  const hits = BASE_HITS;
   const cells = buildCells(hits);
-  const capped = BASE_HITS + onCount > MAX_HITS;
   const winIndex = result.kind === 'done' && cells[result.index] !== 'miss' ? result.index : null;
-
-  /** 指標を変更する。回転中は無視し、変更後は結果を「準備OK」に戻す */
-  const changeIndicators = (next: Record<IndicatorId, boolean>) => {
-    if (spinning) return;
-    setOn(next);
-    setResult({ kind: 'ready' });
-  };
-
-  const applyPreset = (preset: Preset) => changeIndicators(buildPreset(preset));
-
-  const toggleIndicator = (id: IndicatorId) => changeIndicators({ ...on, [id]: !on[id] });
 
   /** ルーレットを回し、アニメーション終了後に結果を確定する */
   const spin = () => {
@@ -87,9 +65,7 @@ export default function Roulette() {
   return (
     <main class="mx-auto max-w-[480px] px-4 pt-5 pb-12">
       <h1 class="mt-1 mb-0.5 text-2xl font-black tracking-wide">お年玉ルーレット</h1>
-      <p class="mb-4 text-sm text-muted">
-        今年の経済指標が○なら、当たり枠が増えます。ハズレでも据え置きで、減ることはありません。
-      </p>
+      <p class="mb-4 text-sm text-muted">ハズレでも据え置きで、減ることはありません。</p>
 
       <div class="relative mx-auto mt-2 aspect-square w-[min(100%,360px)]">
         <Pointer />
@@ -103,7 +79,6 @@ export default function Roulette() {
         </div>
         <p class="mt-0.5 mb-0 text-[.8125rem] text-muted">
           当たり確率 {(hits * 100) / CELLS}% ・ 1人あたり期待値 +{Math.round(expectedBonus(cells))}円
-          {capped ? '(上限)' : ''}
         </p>
       </div>
 
@@ -117,7 +92,6 @@ export default function Roulette() {
       </button>
 
       <ResultPanel result={result} cells={cells} base={AGES[age].base} />
-      <IndicatorList on={on} disabled={spinning} onPreset={applyPreset} onToggle={toggleIndicator} />
       <AgeSelect age={age} onChange={setAge} />
       <RulesSection simOut={simOut} onSimulate={runSimulation} />
     </main>

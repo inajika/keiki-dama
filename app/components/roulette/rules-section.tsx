@@ -1,11 +1,11 @@
-import { BASE_HITS, HIT_BONUS, JACKPOT_BONUS, JACKPOT_MIN_HITS, MAX_HITS, yen } from '@/logics/roulette';
+import { BASE_HITS, HIT_BONUS, yen } from '@/logics/roulette';
 import { chipClass } from './styles';
 
 const rules = [
-  `基本の当たり枠は${BASE_HITS}マス。指標が○になるごとに+1マス(最大${MAX_HITS}マス)`,
-  `当たりは+${yen(HIT_BONUS)}。当たり枠が${JACKPOT_MIN_HITS}マス以上の年は、そのうち1マスが+${yen(JACKPOT_BONUS)}の大当たり`,
+  `当たり枠は${BASE_HITS}マス`,
+  `当たりは+${yen(HIT_BONUS)}`,
   'ハズレは±0(据え置き)で、減額はありません',
-  `予算は「基本額 + ${yen(JACKPOT_BONUS)}」で確保しておけば足ります`,
+  `予算は「基本額 + ${yen(HIT_BONUS)}」で確保しておけば足ります`,
 ];
 
 type RulesSectionProps = {

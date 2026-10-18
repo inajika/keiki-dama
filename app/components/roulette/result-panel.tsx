@@ -11,13 +11,10 @@ type ResultPanelProps = {
 export function ResultPanel(props: ResultPanelProps) {
   const { result, cells, base } = props;
   let border = 'border-line';
-  let main = '指標を選んで、回してみましょう';
+  let main = 'ルーレットを回してみましょう';
   let sub = '当たり枠は上の数字のとおりです';
 
-  if (result.kind === 'ready') {
-    main = '準備OK';
-    sub = '当たり枠が変わりました。回してみましょう';
-  } else if (result.kind === 'spinning') {
+  if (result.kind === 'spinning') {
     main = 'まわっています…';
     // 空文字だと行が潰れてパネルの高さが変わるため、空白で高さを保つ
     sub = ' ';

@@ -113,7 +113,7 @@ gh pr create --base develop
 master ブランチへのマージ (本番リリース) をトリガーに、GitHub Actions ([deploy.yml](./.github/workflows/deploy.yml)) が `npm run check`、`npm run test` を実行したあと、Cloudflare Workers へデプロイします。<br/>
 GitHub の Actions タブから `Deploy` ワークフローを手動実行 (`workflow_dispatch`) することもできます。
 
-デプロイには、リポジトリの Secrets に以下の登録が必要です。
+デプロイには、GitHub の `production` Environment (Settings → Environments) の Secrets に以下の登録が必要です。
 
 | Secret | 内容 |
 | --- | --- |

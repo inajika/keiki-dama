@@ -1,28 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildCells,
-  buildInitialOn,
-  buildPreset,
   CELLS,
   calcRotationDelta,
-  countHits,
+  clampHits,
   expectedBonus,
   formatSimulation,
-  INDICATORS,
   MAX_HITS,
+  MIN_HITS,
   simulate,
   yen,
 } from './roulette';
 
-describe('countHits', () => {
-  it('指標が全て×でも基本の1枠', () => {
-    expect(countHits(0)).toBe(1);
+describe('clampHits', () => {
+  it('範囲内はそのまま', () => {
+    expect(clampHits(4)).toBe(4);
   });
-  it('○1つにつき+1枠', () => {
-    expect(countHits(3)).toBe(4);
+  it('下限未満は MIN_HITS', () => {
+    expect(clampHits(0)).toBe(MIN_HITS);
   });
-  it('上限を超えない', () => {
-    expect(countHits(6)).toBe(MAX_HITS);
+  it('上限超は MAX_HITS', () => {
+    expect(clampHits(10)).toBe(MAX_HITS);
   });
 });
 
@@ -68,27 +66,6 @@ describe('calcRotationDelta', () => {
 describe('yen', () => {
   it('3桁区切りで「円」を付ける', () => {
     expect(yen(10000)).toBe('10,000円');
-  });
-});
-
-describe('buildInitialOn', () => {
-  it('すべての指標が×', () => {
-    const on = buildInitialOn();
-    expect(Object.keys(on)).toHaveLength(INDICATORS.length);
-    expect(Object.values(on).every((v) => !v)).toBe(true);
-  });
-});
-
-describe('buildPreset', () => {
-  it('数値指定なら先頭からその数だけ○', () => {
-    const on = buildPreset(3);
-    expect(INDICATORS.map((d) => on[d.id])).toEqual([true, true, true, false, false, false]);
-  });
-  it('random は乱数が0.5未満の指標だけ○', () => {
-    const values = [0.1, 0.9, 0.4, 0.5, 0.0, 0.99];
-    let i = 0;
-    const on = buildPreset('random', () => values[i++]);
-    expect(INDICATORS.map((d) => on[d.id])).toEqual([true, false, true, false, true, false]);
   });
 });
 

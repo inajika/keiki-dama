@@ -5,42 +5,22 @@ export type CellType = 'miss' | 'hit' | 'jackpot';
 export const CELLS = 10;
 /** 1マスあたりの角度 */
 export const SEGMENT_DEG = 360 / CELLS;
-export const BASE_HITS = 1;
-export const MAX_HITS = 6;
+/** 当たり枠の初期値 */
+export const DEFAULT_HITS = 1;
+/** 当たり枠の下限 (ハズレのみ・全部当たりを避けるため 1〜CELLS-1 に収める) */
+export const MIN_HITS = 1;
+/** 当たり枠の上限 */
+export const MAX_HITS = CELLS - 1;
 export const HIT_BONUS = 500;
 export const JACKPOT_BONUS = 1000;
 export const JACKPOT_MIN_HITS = 4;
 
-export const INDICATORS = [
-  { id: 'cpi', name: '物価', cond: '消費者物価指数が前年比+2%超' },
-  { id: 'wage', name: '実質賃金', cond: '前年比でプラス' },
-  { id: 'shunto', name: '春闘', cond: '賃上げ率が物価上昇率を上回る' },
-  { id: 'mood', name: '消費者態度指数', cond: '前年より改善' },
-  { id: 'stock', name: '日経平均', cond: '年間でプラス' },
-  { id: 'bonus', name: '冬のボーナス', cond: '前年より増加' },
-] as const;
-
-/** 経済指標のID */
-export type IndicatorId = (typeof INDICATORS)[number]['id'];
-
 /** ルーレットの進行状態 */
-export type Result = { kind: 'idle' } | { kind: 'ready' } | { kind: 'spinning' } | { kind: 'done'; index: number };
+export type Result = { kind: 'idle' } | { kind: 'spinning' } | { kind: 'done'; index: number };
 
-/** プリセット指定。数値は先頭から○にする指標数、'random' は各指標をランダムに決める */
-export type Preset = number | 'random';
-
-export const AGES = [
-  { label: '未就学', base: 1000 },
-  { label: '小学校低学年', base: 2000 },
-  { label: '小学校高学年', base: 3000 },
-  { label: '中学生', base: 5000 },
-  { label: '高校生', base: 5000 },
-  { label: '大学生', base: 10000 },
-] as const;
-
-/** ○の指標数から当たり枠の数を求める */
-export function countHits(onCount: number): number {
-  return Math.min(BASE_HITS + onCount, MAX_HITS);
+/** 当たり枠の数を MIN_HITS〜MAX_HITS の範囲に収める */
+export function clampHits(hits: number): number {
+  return Math.min(Math.max(hits, MIN_HITS), MAX_HITS);
 }
 
 /** hits 個の当たりを均等に散らし、hits が JACKPOT_MIN_HITS 以上なら最初の1つを大当たりにする */
@@ -73,21 +53,6 @@ export function calcRotationDelta(currentRotation: number, targetDeg: number, tu
 /** 金額を「1,000円」形式に整形する */
 export function yen(n: number): string {
   return `${n.toLocaleString('ja-JP')}円`;
-}
-
-/** すべての指標が×の状態を返す */
-export function buildInitialOn(): Record<IndicatorId, boolean> {
-  return Object.fromEntries(INDICATORS.map((d) => [d.id, false])) as Record<IndicatorId, boolean>;
-}
-
-/**
- * プリセットに対応する指標の○/×を返す
- * @param random 0以上1未満の乱数を返す関数。テストで差し替えられるよう注入する
- */
-export function buildPreset(preset: Preset, random: () => number = Math.random): Record<IndicatorId, boolean> {
-  return Object.fromEntries(
-    INDICATORS.map((d, i) => [d.id, preset === 'random' ? random() < 0.5 : i < preset]),
-  ) as Record<IndicatorId, boolean>;
 }
 
 /** シミュレーション結果 */

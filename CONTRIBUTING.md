@@ -39,6 +39,7 @@
 | UI | Hono JSX (`hono/jsx`) |
 | スタイリング | [Tailwind CSS](https://tailwindcss.com/) v4 |
 | ビルド・開発サーバー | [Vite](https://vite.dev/) |
+| コンポーネントカタログ | [Storybook](https://storybook.js.org/) (`@storybook/html-vite`) |
 | デプロイ | [Wrangler](https://developers.cloudflare.com/workers/wrangler/) (Cloudflare Workers) |
 | リンター・フォーマッター | [Biome](https://biomejs.dev/) |
 | 開発環境 | Docker / DevContainer (VSCode) |
@@ -72,6 +73,16 @@ npx wrangler kv key put --binding=INDICATORS --local indicators:latest '{...}'
 ```
 
 外部 API の鍵は、リポジトリにコミットしない `.dev.vars` に書きます。本番は `wrangler secret put` で設定します。
+
+### Storybook
+コンポーネントの見た目をサーバー起動なしで確認できます。ストーリーは対象コンポーネントと同じ階層の `*.stories.tsx` に記述します。
+
+```bash
+npm run storybook
+```
+
+ブラウザで `http://localhost:6006/` にアクセスすると確認できます。<br/>
+hono/jsx はサーバーサイド専用のため、`renderHtmlStory` ([story-utils.tsx](./app/lib/story-utils.tsx)) で HTML 文字列にして表示しています。そのためイベントや状態は動作せず、`args` で与えた props の静的な見た目のみ確認できます。
 
 ### フォーマットチェック
 ```bash

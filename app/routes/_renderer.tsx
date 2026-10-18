@@ -1,5 +1,7 @@
 import { jsxRenderer } from 'hono/jsx-renderer';
 import { Link, Script } from 'honox/server';
+import { SiteFooter } from '@/components/layout/site-footer';
+import { SiteHeader } from '@/components/layout/site-header';
 
 export default jsxRenderer(({ children }) => {
   return (
@@ -17,7 +19,11 @@ export default jsxRenderer(({ children }) => {
         <Link href="/app/style.css" rel="stylesheet" />
         <Script src="/app/client.ts" async />
       </head>
-      <body>{children}</body>
+      <body class="flex min-h-dvh flex-col">
+        <SiteHeader />
+        <div class="flex-1">{children}</div>
+        <SiteFooter />
+      </body>
     </html>
   );
 });

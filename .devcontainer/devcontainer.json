@@ -3,8 +3,8 @@
   "dockerComposeFile": "compose.yml",
   "service": "app",
   "workspaceFolder": "/develop/keiki-dama",
-  "postCreateCommand": "sudo chown -R node:node /home/node/.npm",
-  "postStartCommand": "git config --global core.editor vim",
+  "postCreateCommand": "sudo chown -R node:node /home/node",
+  "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder} && git config --global core.editor vim",
   "postAttachCommand": "node --version | sed 's/v//g' | awk -F. -v OFS=. '{print $1,$2}' > .node-version && npm install",
   "features": {
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}

@@ -1,6 +1,6 @@
 FROM node:24-slim
 
-ENV TZ=UTC C.LANG=UTF-8
+ENV TZ=UTC LANG=C.UTF-8
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \

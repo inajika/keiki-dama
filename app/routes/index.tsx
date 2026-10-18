@@ -4,7 +4,7 @@ import Roulette from '@/islands/roulette';
 export default createRoute((c) => {
   return c.render(
     <>
-      <title>お年玉ルーレット(プロトタイプ)</title>
+      <title>景気玉 | お年玉増額ルーレット</title>
       <Roulette />
     </>,
   );
